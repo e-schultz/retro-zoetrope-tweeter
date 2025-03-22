@@ -2,7 +2,7 @@
 import React from 'react';
 import Post from './Post';
 
-// Sample data
+// Sample data with enhanced post types
 const posts = [
   {
     id: '1a2b3c4d5e6f7g8h',
@@ -17,6 +17,34 @@ const posts = [
     repostCount: 5,
     likeCount: 42,
     connectionCount: 7,
+    isThread: true,
+    linkedPosts: [
+      { id: '3c4d5e6f7g8h1a2b', title: 'Vector Graphics' }
+    ]
+  },
+  {
+    id: '5r6t7y8u9i0o1p2q',
+    author: {
+      name: 'SynthMind',
+      handle: 'pattern_seeker',
+    },
+    content: 'I find this connection between techno aesthetics and thought organization fascinating. The structured yet fluid nature creates perfect symmetry for cognitive exploration.',
+    timestamp: '01.24.85',
+    tags: ['cognition', 'aesthetics'],
+    replyCount: 3,
+    repostCount: 2,
+    likeCount: 18,
+    connectionCount: 4,
+    isQuote: true,
+    quotedPost: {
+      id: '1a2b3c4d5e6f7g8h',
+      author: {
+        name: 'DataExplorer',
+        handle: 'neural_nexus',
+      },
+      content: 'Just connected my thoughts on #techno influences in #retrocomputing interfaces. The geometric precision and neon aesthetics create an almost meditative state...',
+      timestamp: '01.24.85',
+    }
   },
   {
     id: '8h7g6f5e4d3c2b1a',
@@ -31,6 +59,10 @@ const posts = [
     repostCount: 14,
     likeCount: 37,
     connectionCount: 22,
+    linkedPosts: [
+      { id: '9q8w7e6r5t4y3u2i', title: 'Knowledge Systems' },
+      { id: '2i3u4y5t6r7e8w9q', title: 'Neural Networks' }
+    ]
   },
   {
     id: '5e6f7g8h1a2b3c4d',

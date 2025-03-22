@@ -1,6 +1,6 @@
 
 import React, { useState } from 'react';
-import { MessageSquare, Repeat2, Share, Star, AtSign, Clock, ArrowRight } from 'lucide-react';
+import { MessageSquare, Repeat2, Share, Star, AtSign, Clock, ArrowRight, Link2, Quote } from 'lucide-react';
 import TagChip from './TagChip';
 
 interface PostProps {
@@ -17,6 +17,21 @@ interface PostProps {
   repostCount: number;
   likeCount: number;
   connectionCount: number;
+  isThread?: boolean;
+  isQuote?: boolean;
+  quotedPost?: {
+    id: string;
+    author: {
+      name: string;
+      handle: string;
+    };
+    content: string;
+    timestamp: string;
+  };
+  linkedPosts?: {
+    id: string;
+    title: string;
+  }[];
 }
 
 const Post: React.FC<PostProps> = ({
@@ -29,6 +44,10 @@ const Post: React.FC<PostProps> = ({
   repostCount,
   likeCount,
   connectionCount,
+  isThread = false,
+  isQuote = false,
+  quotedPost,
+  linkedPosts = [],
 }) => {
   const [isExpanded, setIsExpanded] = useState(false);
   
@@ -53,6 +72,12 @@ const Post: React.FC<PostProps> = ({
         </div>
         
         <div className="flex items-center text-xs text-terminal-cyan">
+          {isThread && (
+            <span className="mr-2 px-1.5 py-0.5 rounded bg-neon-green/10 text-neon-green border border-neon-green/20 flex items-center">
+              <MessageSquare size={10} className="mr-1" />
+              Thread
+            </span>
+          )}
           <Clock size={12} className="mr-1" />
           <span>{timestamp}</span>
           <span className="ml-2 mr-1 text-terminal-green">ID:</span>
@@ -61,6 +86,23 @@ const Post: React.FC<PostProps> = ({
       </div>
       
       <div className="px-4 py-3">
+        {isQuote && quotedPost && (
+          <div className="mb-3 p-3 border border-dashed border-neon-purple/40 rounded bg-black/40">
+            <div className="flex items-center justify-between mb-2">
+              <div className="flex items-center gap-1 text-xs">
+                <Quote size={12} className="text-neon-purple" />
+                <span className="text-neon-purple">Quote:</span>
+                <span className="text-terminal-white">@{quotedPost.author.handle}</span>
+                <span className="text-terminal-cyan/70 ml-1">{quotedPost.timestamp}</span>
+              </div>
+              <span className="text-xs text-terminal-cyan">{quotedPost.id.slice(0, 6)}</span>
+            </div>
+            <div className="text-sm text-terminal-cyan/90 line-clamp-2">
+              {quotedPost.content}
+            </div>
+          </div>
+        )}
+        
         <div className={`whitespace-pre-wrap ${!isExpanded && content.length > 280 ? 'line-clamp-3' : ''}`}>
           {content}
         </div>
@@ -72,6 +114,25 @@ const Post: React.FC<PostProps> = ({
           >
             {isExpanded ? 'Collapse' : 'Expand thread'}
           </button>
+        )}
+        
+        {linkedPosts.length > 0 && (
+          <div className="mt-3 border-t border-terminal-grid/30 pt-2">
+            <div className="flex items-center gap-1 text-xs text-neon-blue mb-1">
+              <Link2 size={12} />
+              <span>Linked thoughts:</span>
+            </div>
+            <div className="flex flex-wrap gap-2">
+              {linkedPosts.map(post => (
+                <button 
+                  key={post.id}
+                  className="text-xs px-2 py-1 bg-neon-blue/10 border border-neon-blue/30 rounded-sm text-terminal-cyan hover:bg-neon-blue/20 transition-colors"
+                >
+                  {post.title || post.id.slice(0, 6)}
+                </button>
+              ))}
+            </div>
+          </div>
         )}
         
         {tags.length > 0 && (
