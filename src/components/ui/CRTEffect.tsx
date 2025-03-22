@@ -7,7 +7,6 @@ const CRTEffect: React.FC = () => {
   
   // Reduce effect intensity on mobile
   const opacityValues = {
-    crtFlicker: isMobile ? 'opacity-[0.02]' : 'opacity-[0.05]',
     scanlines: isMobile ? 'opacity-[0.05]' : 'opacity-[0.1]',
     scanLine: isMobile ? 'bg-terminal-white/5' : 'bg-terminal-white/10',
     vignette: isMobile ? 'opacity-40' : 'opacity-60'
@@ -15,8 +14,7 @@ const CRTEffect: React.FC = () => {
 
   return (
     <div className="pointer-events-none fixed inset-0 z-50">
-      {/* Overlay with subtle CRT screen glow - reduced opacity */}
-      <div className={`absolute inset-0 bg-terminal-black ${opacityValues.crtFlicker} mix-blend-multiply animate-crt-flicker`}></div>
+      {/* Removed the CRT flicker effect */}
       
       {/* Scanlines effect - reduced opacity */}
       <div className={`absolute inset-0 scanlines z-30 ${opacityValues.scanlines}`}></div>
