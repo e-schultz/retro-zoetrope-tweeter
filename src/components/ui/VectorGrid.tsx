@@ -1,8 +1,10 @@
 
 import React, { useEffect, useRef } from 'react';
+import { useIsMobile } from '@/hooks/use-mobile';
 
 const VectorGrid: React.FC = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const isMobile = useIsMobile();
   
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -30,27 +32,31 @@ const VectorGrid: React.FC = () => {
       
       // Configuration
       const now = Date.now() / 5000;
-      const gridSize = 40;
+      // Larger grid size on mobile means fewer lines
+      const gridSize = isMobile ? 60 : 40;
       const perspective = 800;
-      const depth = 10;
+      // Fewer depth levels on mobile
+      const depth = isMobile ? 6 : 10;
       
       // Center point
       const centerX = canvas.width / 2;
       const centerY = canvas.height / 2;
       
-      // Draw grid lines
-      ctx.strokeStyle = 'rgba(26, 58, 58, 0.3)';
+      // Draw grid lines with reduced opacity
       ctx.lineWidth = 1;
       
-      // Floor grid
+      // Floor grid with reduced opacity
       for (let z = 1; z <= depth; z++) {
         const scale = perspective / (perspective + z * gridSize);
-        const lineOpacity = 0.4 - (z / depth) * 0.3;
+        // Reduced opacity overall, especially on mobile
+        const baseOpacity = isMobile ? 0.2 : 0.3;
+        const lineOpacity = baseOpacity - (z / depth) * 0.2;
         
         ctx.strokeStyle = `rgba(26, 58, 58, ${lineOpacity})`;
         
-        // Horizontal lines
-        for (let y = -15; y <= 15; y++) {
+        // Horizontal lines - draw fewer on mobile
+        const lineStep = isMobile ? 2 : 1;
+        for (let y = -15; y <= 15; y += lineStep) {
           const y1 = centerY + (y * gridSize - gridSize/2) * scale;
           
           ctx.beginPath();
@@ -66,8 +72,8 @@ const VectorGrid: React.FC = () => {
           ctx.stroke();
         }
         
-        // Vertical lines
-        for (let x = -15; x <= 15; x++) {
+        // Vertical lines - draw fewer on mobile
+        for (let x = -15; x <= 15; x += lineStep) {
           const x1 = centerX + x * gridSize * scale;
           
           ctx.beginPath();
@@ -84,17 +90,18 @@ const VectorGrid: React.FC = () => {
         }
       }
       
-      // Draw some vector-style geometric elements
-      ctx.strokeStyle = 'rgba(177, 74, 237, 0.3)';
-      ctx.lineWidth = 1.5;
+      // Draw some vector-style geometric elements with reduced opacity
+      ctx.strokeStyle = 'rgba(177, 74, 237, 0.2)'; // Reduced from 0.3
+      ctx.lineWidth = isMobile ? 1 : 1.5;
       
-      // Draw central vector shape
-      const time = Date.now() / 2000;
+      // Draw central vector shape - simpler animation
+      const time = Date.now() / 3000; // Slower animation
       
       ctx.beginPath();
       for (let i = 0; i <= 6; i++) {
         const angle = (i / 6) * Math.PI * 2 + time;
-        const radius = 80 + Math.sin(time * 2 + i) * 20;
+        // Reduced animation amplitude
+        const radius = 80 + Math.sin(time * 1.5 + i) * 10; // Reduced from 20
         const x = centerX + Math.cos(angle) * radius;
         const y = centerY + Math.sin(angle) * radius * 0.3;
         
@@ -118,7 +125,7 @@ const VectorGrid: React.FC = () => {
     return () => {
       window.removeEventListener('resize', setCanvasSize);
     };
-  }, []);
+  }, [isMobile]);
   
   return (
     <canvas 

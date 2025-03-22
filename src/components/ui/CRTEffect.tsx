@@ -1,25 +1,36 @@
 
 import React from 'react';
+import { useIsMobile } from '@/hooks/use-mobile';
 
 const CRTEffect: React.FC = () => {
+  const isMobile = useIsMobile();
+  
+  // Reduce effect intensity on mobile
+  const opacityValues = {
+    crtFlicker: isMobile ? 'opacity-[0.02]' : 'opacity-[0.05]',
+    scanlines: isMobile ? 'opacity-[0.05]' : 'opacity-[0.1]',
+    scanLine: isMobile ? 'bg-terminal-white/5' : 'bg-terminal-white/10',
+    vignette: isMobile ? 'opacity-40' : 'opacity-60'
+  };
+
   return (
     <div className="pointer-events-none fixed inset-0 z-50">
-      {/* Overlay with subtle CRT screen glow */}
-      <div className="absolute inset-0 bg-terminal-black opacity-5 mix-blend-multiply animate-crt-flicker"></div>
+      {/* Overlay with subtle CRT screen glow - reduced opacity */}
+      <div className={`absolute inset-0 bg-terminal-black ${opacityValues.crtFlicker} mix-blend-multiply animate-crt-flicker`}></div>
       
-      {/* Scanlines effect */}
-      <div className="absolute inset-0 scanlines z-30 opacity-10"></div>
+      {/* Scanlines effect - reduced opacity */}
+      <div className={`absolute inset-0 scanlines z-30 ${opacityValues.scanlines}`}></div>
       
-      {/* Moving scan line */}
+      {/* Moving scan line - less visible */}
       <div className="absolute inset-0 overflow-hidden">
-        <div className="absolute left-0 right-0 h-[2px] bg-terminal-white/10 animate-scan-line z-30"></div>
+        <div className={`absolute left-0 right-0 h-[1px] ${opacityValues.scanLine} animate-scan-line z-30`}></div>
       </div>
       
-      {/* Vignette effect (darkened corners) */}
-      <div className="absolute inset-0 bg-radial-gradient-vignette opacity-60 z-20"></div>
+      {/* Vignette effect (darkened corners) - reduced opacity */}
+      <div className={`absolute inset-0 bg-radial-gradient-vignette ${opacityValues.vignette} z-20`}></div>
       
       {/* Screen curvature */}
-      <div className="absolute inset-0 rounded-[40px] opacity-30 z-20 pointer-events-none"></div>
+      <div className="absolute inset-0 rounded-[40px] opacity-20 z-20 pointer-events-none"></div>
     </div>
   );
 };
