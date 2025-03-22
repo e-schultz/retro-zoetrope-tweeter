@@ -1,9 +1,40 @@
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import Post from './Post';
+import { useToast } from '@/hooks/use-toast';
+import { useIsMobile } from '@/hooks/use-mobile';
 
-// Sample data with enhanced post types
-const posts = [
+// Define post type for better type safety
+export type Author = {
+  name: string;
+  handle: string;
+};
+
+export type QuotedPost = {
+  id: string;
+  author: Author;
+  content: string;
+  timestamp: string;
+};
+
+export type PostData = {
+  id: string;
+  author: Author;
+  content: string;
+  timestamp: string;
+  tags: string[];
+  replyCount: number;
+  repostCount: number;
+  likeCount: number;
+  connectionCount: number;
+  isThread?: boolean;
+  isQuote?: boolean;
+  quotedPost?: QuotedPost;
+  linkedPosts?: { id: string; title: string }[];
+};
+
+// Initial sample data with enhanced post types
+const initialPosts: PostData[] = [
   {
     id: '1a2b3c4d5e6f7g8h',
     author: {
@@ -94,16 +125,110 @@ const posts = [
   },
 ];
 
+// Helper to generate a unique ID
+const generateId = () => {
+  return Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+};
+
+// Helper to get current date in retro format
+const getCurrentTimestamp = () => {
+  const now = new Date();
+  const month = String(now.getMonth() + 1).padStart(2, '0');
+  const day = String(now.getDate()).padStart(2, '0');
+  const year = String(now.getFullYear()).substring(2);
+  return `${month}.${day}.${year}`;
+};
+
 const PostList: React.FC = () => {
+  const [posts, setPosts] = useState<PostData[]>([]);
+  const { toast } = useToast();
+  const isMobile = useIsMobile();
+
+  useEffect(() => {
+    // Check if posts already exist in localStorage
+    const storedPosts = localStorage.getItem('zettr_posts');
+    
+    if (storedPosts) {
+      try {
+        setPosts(JSON.parse(storedPosts));
+      } catch (error) {
+        console.error('Error parsing posts from localStorage:', error);
+        // If there's an error parsing, initialize with default posts
+        setPosts(initialPosts);
+        localStorage.setItem('zettr_posts', JSON.stringify(initialPosts));
+      }
+    } else {
+      // Initialize localStorage with default posts
+      setPosts(initialPosts);
+      localStorage.setItem('zettr_posts', JSON.stringify(initialPosts));
+    }
+
+    // Set up event listener for new posts
+    window.addEventListener('new-zettr-post', ((event: CustomEvent) => {
+      const newPost = event.detail;
+      addNewPost(newPost);
+    }) as EventListener);
+
+    return () => {
+      window.removeEventListener('new-zettr-post', ((event: CustomEvent) => {
+        const newPost = event.detail;
+        addNewPost(newPost);
+      }) as EventListener);
+    };
+  }, []);
+
+  const addNewPost = (postData: Partial<PostData>) => {
+    const newPost: PostData = {
+      id: generateId(),
+      author: {
+        name: 'User',
+        handle: 'user_handle',
+      },
+      content: postData.content || '',
+      timestamp: getCurrentTimestamp(),
+      tags: postData.tags || extractTagsFromContent(postData.content || ''),
+      replyCount: 0,
+      repostCount: 0,
+      likeCount: 0,
+      connectionCount: 0,
+      ...postData,
+    };
+    
+    setPosts(prevPosts => {
+      const updatedPosts = [newPost, ...prevPosts];
+      localStorage.setItem('zettr_posts', JSON.stringify(updatedPosts));
+      return updatedPosts;
+    });
+
+    toast({
+      title: "Thought connected",
+      description: "Your new thought has been added to the network.",
+    });
+  };
+
+  // Extract tags from content (e.g., #tag)
+  const extractTagsFromContent = (content: string): string[] => {
+    const tagRegex = /#(\w+)/g;
+    const matches = content.match(tagRegex);
+    if (!matches) return [];
+    return matches.map(tag => tag.substring(1)); // Remove the # symbol
+  };
+
   return (
-    <div className="mt-4">
+    <div className={`mt-4 ${isMobile ? 'px-1' : ''}`}>
       <div className="text-sm text-terminal-white border-b border-terminal-grid pb-2 mb-4">
         RECENT THOUGHT CONNECTIONS <span className="text-terminal-green animate-terminal-blink">█</span>
       </div>
       
-      {posts.map((post) => (
-        <Post key={post.id} {...post} />
-      ))}
+      {posts.length === 0 ? (
+        <div className="text-terminal-cyan text-center py-8">
+          No thoughts connected yet. Start by sharing your first thought.
+        </div>
+      ) : (
+        posts.map((post) => (
+          <Post key={post.id} {...post} />
+        ))
+      )}
     </div>
   );
 };
