@@ -1,69 +1,146 @@
-# Welcome to your Lovable project
 
-## Project info
+# ZETTR_NET - Personal Knowledge Network
 
-**URL**: https://lovable.dev/projects/f1878ac0-3908-4cd6-b59e-0eb0ff34b4d8
+![ZETTR_NET Interface](https://i.imgur.com/xXXxXXX.png) <!-- Replace with actual screenshot when available -->
 
-## How can I edit this code?
+## Project Description
 
-There are several ways of editing your application.
+ZETTR_NET is a retro-futuristic personal knowledge management system inspired by Zettelkasten note-taking methodology combined with social media paradigms. It provides an immersive terminal-like interface where users can create, connect, and explore their thoughts in a networked environment. The aesthetic draws from retro computing, cyberpunk, and techno culture, creating a unique environment for organizing personal knowledge.
 
-**Use Lovable**
+## Installation Instructions
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/f1878ac0-3908-4cd6-b59e-0eb0ff34b4d8) and start prompting.
+### Prerequisites
+- Node.js (v14.0.0 or higher)
+- npm (v6.0.0 or higher)
 
-Changes made via Lovable will be committed automatically to this repo.
+### Setup
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/yourusername/zettr-net.git
+   cd zettr-net
+   ```
 
-**Use your preferred IDE**
+2. Install dependencies:
+   ```bash
+   npm install
+   ```
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+3. Start the development server:
+   ```bash
+   npm run dev
+   ```
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+4. Open your browser and navigate to `http://localhost:8080`
 
-Follow these steps:
+## Usage Instructions
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+### Creating New Thoughts
+1. Type your thoughts in the terminal input at the top of the main stream
+2. Add #tags by typing the # symbol followed by the tag name
+3. Click "EXECUTE" to publish your thought to your knowledge network
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
+### Creating Different Types of Connections
+- **New Thread**: Create a series of connected thoughts by clicking the "New Thread" button
+- **Quote Thought**: Reference an existing thought and add your perspective by clicking "Quote Thought"
+- **Cross-Link**: Connect two thoughts together by clicking "Cross-Link"
 
-# Step 3: Install the necessary dependencies.
-npm i
+### Navigating Your Knowledge Network
+- Use the sidebar navigation to access different views of your knowledge network
+- The Connection Map visualizes how your thoughts are connected
+- Tags can be used to filter and organize your thoughts
 
-# Step 4: Start the development server with auto-reloading and an instant preview.
-npm run dev
+## Features
+
+- 🖥️ Immersive retro terminal interface with CRT screen effects
+- 📝 Create, organize, and connect thoughts with a Zettelkasten-inspired approach
+- 🏷️ Tag-based organization system
+- 🔗 Different connection types: threads, quotes, and cross-links
+- 📊 Visual connection map showing thought relationships
+- 📱 Fully responsive design for both desktop and mobile
+- 💾 Persistent storage using localStorage
+- 🔍 Future AI analysis capabilities (planned)
+
+## Technologies Used
+
+- **Frontend Framework**: React with TypeScript
+- **Build Tool**: Vite
+- **Styling**: Tailwind CSS
+- **UI Components**: shadcn/ui
+- **Icons**: Lucide React
+- **Routing**: React Router
+- **State Management**: React Hooks and Context API
+- **Data Persistence**: localStorage
+- **Others**: 
+  - Sonner for toast notifications
+  - React Query for future API integration
+
+## Project Structure
+
+```
+src/
+├── components/
+│   ├── connections/    # Connection visualization components
+│   ├── layout/         # Layout components
+│   ├── posts/          # Post/thought components
+│   ├── terminal/       # Terminal UI components
+│   └── ui/             # Reusable UI components
+├── hooks/              # Custom React hooks
+├── lib/                # Utility functions
+├── pages/              # Page components
+└── App.tsx             # Main application component
 ```
 
-**Edit a file directly in GitHub**
+## Contributing
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+Contributions are welcome! Here's how you can contribute:
 
-**Use GitHub Codespaces**
+1. Fork the repository
+2. Create a new branch: `git checkout -b feature/your-feature-name`
+3. Make your changes and commit them: `git commit -m 'Add some feature'`
+4. Push to the branch: `git push origin feature/your-feature-name`
+5. Submit a pull request
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+### Coding Standards
+- Follow existing code style and formatting
+- Use TypeScript for type safety
+- Write component-specific CSS using Tailwind classes
+- Add comments for complex logic
 
-## What technologies are used for this project?
+## License
 
-This project is built with .
+This project is licensed under the MIT License - see the LICENSE file for details.
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+## Original Prompt
 
-## How can I deploy this project?
+The original concept for ZETTR_NET came from the following prompt:
 
-Simply open [Lovable](https://lovable.dev/projects/f1878ac0-3908-4cd6-b59e-0eb0ff34b4d8) and click on Share -> Publish.
+> I'm thinking of the user flow as a Twitter-like Personal Diary type thing where people can just post and log things through the day. Kind of like Twitter as well as a live stream of your brain. The background AI analyzes your posts in chronological order, identifying patterns and then provides responses or quote tweets with ideas, patterns, or help create connections. The idea is the person just types and writes however they normally do, and in the background it analyzes the stream of content to surface insights.
 
-## I want to use a custom domain - is that possible?
+## Troubleshooting
 
-We don't support custom domains (yet). If you want to deploy your project under your own domain then we recommend using Netlify. Visit our docs for more details: [Custom domains](https://docs.lovable.dev/tips-tricks/custom-domain/)
+### Common Issues
+
+**Issue**: Posts not appearing after creation
+**Solution**: Ensure localStorage is enabled in your browser and that you're not in private/incognito mode
+
+**Issue**: UI display problems
+**Solution**: Try refreshing the page or clearing your browser cache
+
+**Issue**: Mobile navigation issues
+**Solution**: Use the floating menu button in the bottom right corner to access navigation on mobile devices
+
+## Future Improvements
+
+- 🧠 AI analysis of thought patterns to suggest connections and insights
+- 🔄 Twitter API integration to import tweets as thoughts
+- 🔍 Advanced search and filtering capabilities
+- 🗂️ Custom organizational systems beyond tags
+- 👥 Optional collaborative features for shared knowledge spaces
+- 📊 Advanced visualization options for the knowledge graph
+- 📱 Progressive Web App (PWA) support for offline usage
+- 🔐 End-to-end encryption for sensitive thoughts
+- 🗃️ Data export and import functionality
+
+---
+
+Created with [Lovable](https://lovable.dev)
