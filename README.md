@@ -1,7 +1,11 @@
 
 # ZETTR_NET - Personal Knowledge Network
 
-![ZETTR_NET Interface](https://i.imgur.com/xXXxXXX.png) <!-- Replace with actual screenshot when available -->
+<img width="1410" alt="Screenshot 2025-04-18 at 10 26 09 AM" src="https://github.com/user-attachments/assets/a112fcb9-c3b1-4bf9-897c-66f64c79a7f9" />
+
+
+**URL**: https://lovable.dev/projects/f1878ac0-3908-4cd6-b59e-0eb0ff34b4d8
+**visit**: https://retro-zoetrope-tweeter.lovable.app/
 
 ## Project Description
 
