@@ -1,11 +1,11 @@
-
 import React, { useState } from 'react';
-import { ArrowRight, Hash, AtSign, BookMarked, Quote, MessageSquarePlus, Link2 } from 'lucide-react';
+import { ArrowRight, Hash, AtSign, BookMarked, Quote, MessageSquarePlus, Link2, ArrowUp } from 'lucide-react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { PostData } from '../posts/PostList';
+import BridgeImporter from '../bridges/BridgeImporter';
 
 type InputMode = 'thought' | 'thread' | 'quote' | 'link';
 
@@ -300,6 +300,9 @@ const TerminalInput: React.FC = () => {
                 <Link2 size={14} />
                 <span>{isMobile ? 'Link' : mode === 'link' ? 'Cancel Link' : 'Cross-Link'}</span>
               </button>
+              
+              {/* New Bridge Importer button */}
+              <BridgeImporter />
             </div>
             
             <button 

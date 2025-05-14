@@ -1,8 +1,10 @@
-
 import React, { useState, useEffect } from 'react';
 import Post from './Post';
 import { useToast } from '@/hooks/use-toast';
 import { useIsMobile } from '@/hooks/use-mobile';
+import { integrateBridgesWithPosts } from '@/services/bridgeService';
+import { ContinuityBridge } from '@/types/ContinuityBridge';
+import BridgeDetails from '../bridges/BridgeDetails';
 
 // Define post type for better type safety
 export type Author = {
@@ -141,6 +143,8 @@ const getCurrentTimestamp = () => {
 
 const PostList: React.FC = () => {
   const [posts, setPosts] = useState<PostData[]>([]);
+  const [selectedBridge, setSelectedBridge] = useState<ContinuityBridge | null>(null);
+  const [isBridgeDetailsOpen, setIsBridgeDetailsOpen] = useState(false);
   const { toast } = useToast();
   const isMobile = useIsMobile();
 
@@ -162,6 +166,9 @@ const PostList: React.FC = () => {
       setPosts(initialPosts);
       localStorage.setItem('zettr_posts', JSON.stringify(initialPosts));
     }
+    
+    // Integrate any existing bridges
+    integrateBridgesWithPosts();
 
     // Set up event listener for new posts
     window.addEventListener('new-zettr-post', ((event: CustomEvent) => {
@@ -169,10 +176,21 @@ const PostList: React.FC = () => {
       addNewPost(newPost);
     }) as EventListener);
 
+    // Set up event listener for bridge selection
+    window.addEventListener('select-zettr-bridge', ((event: CustomEvent) => {
+      const bridge = event.detail;
+      handleBridgeSelect(bridge);
+    }) as EventListener);
+
     return () => {
       window.removeEventListener('new-zettr-post', ((event: CustomEvent) => {
         const newPost = event.detail;
         addNewPost(newPost);
+      }) as EventListener);
+
+      window.removeEventListener('select-zettr-bridge', ((event: CustomEvent) => {
+        const bridge = event.detail;
+        handleBridgeSelect(bridge);
       }) as EventListener);
     };
   }, []);
@@ -206,6 +224,11 @@ const PostList: React.FC = () => {
     });
   };
 
+  const handleBridgeSelect = (bridge: ContinuityBridge) => {
+    setSelectedBridge(bridge);
+    setIsBridgeDetailsOpen(true);
+  };
+
   // Extract tags from content (e.g., #tag)
   const extractTagsFromContent = (content: string): string[] => {
     const tagRegex = /#(\w+)/g;
@@ -220,13 +243,37 @@ const PostList: React.FC = () => {
         RECENT THOUGHT CONNECTIONS <span className="text-terminal-green animate-terminal-blink">█</span>
       </div>
       
+      <BridgeDetails 
+        bridge={selectedBridge} 
+        isOpen={isBridgeDetailsOpen}
+        onOpenChange={setIsBridgeDetailsOpen}
+      />
+      
       {posts.length === 0 ? (
         <div className="text-terminal-cyan text-center py-8">
           No thoughts connected yet. Start by sharing your first thought.
         </div>
       ) : (
         posts.map((post) => (
-          <Post key={post.id} {...post} />
+          <Post 
+            key={post.id} 
+            {...post} 
+            onBridgeSelect={post.author.handle === "float_bridge" ? () => {
+              // Look up the bridge from localStorage
+              try {
+                const bridges = localStorage.getItem('zettr_bridges');
+                if (bridges) {
+                  const parsedBridges = JSON.parse(bridges);
+                  const bridge = parsedBridges.find((b: ContinuityBridge) => b.bridge_id === post.id);
+                  if (bridge) {
+                    handleBridgeSelect(bridge);
+                  }
+                }
+              } catch (error) {
+                console.error('Error finding bridge:', error);
+              }
+            } : undefined}
+          />
         ))
       )}
     </div>

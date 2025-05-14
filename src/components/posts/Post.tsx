@@ -32,6 +32,7 @@ interface PostProps {
     id: string;
     title: string;
   }[];
+  onBridgeSelect?: () => void;
 }
 
 const Post: React.FC<PostProps> = ({
@@ -48,26 +49,31 @@ const Post: React.FC<PostProps> = ({
   isQuote = false,
   quotedPost,
   linkedPosts = [],
+  onBridgeSelect,
 }) => {
   const [isExpanded, setIsExpanded] = useState(false);
+  const isBridge = author.handle === 'float_bridge';
   
   return (
-    <div className="border border-terminal-grid rounded-md mb-4 bg-black/30 backdrop-blur-sm animate-appear" style={{ animationDelay: `${Math.random() * 0.3}s` }}>
-      <div className="border-b border-terminal-grid px-4 py-2 flex justify-between items-center">
+    <div 
+      className={`border rounded-md mb-4 backdrop-blur-sm animate-appear ${isBridge ? 'border-neon-purple/50 bg-black/40' : 'border-terminal-grid bg-black/30'}`}
+      style={{ animationDelay: `${Math.random() * 0.3}s` }}
+    >
+      <div className={`border-b px-4 py-2 flex justify-between items-center ${isBridge ? 'border-neon-purple/30' : 'border-terminal-grid'}`}>
         <div className="flex items-center gap-2">
           {author.avatar ? (
             <div className="w-8 h-8 rounded-md overflow-hidden border border-terminal-grid">
               <img src={author.avatar} alt={author.name} className="w-full h-full object-cover" />
             </div>
           ) : (
-            <div className="w-8 h-8 rounded-md bg-terminal-grid flex items-center justify-center text-neon-purple">
+            <div className={`w-8 h-8 rounded-md flex items-center justify-center ${isBridge ? 'bg-neon-purple/20 text-neon-purple' : 'bg-terminal-grid text-neon-purple'}`}>
               <AtSign size={16} />
             </div>
           )}
           
           <div>
             <div className="text-sm font-semibold text-terminal-white">{author.name}</div>
-            <div className="text-xs text-terminal-cyan">@{author.handle}</div>
+            <div className={`text-xs ${isBridge ? 'text-neon-purple' : 'text-terminal-cyan'}`}>@{author.handle}</div>
           </div>
         </div>
         
@@ -76,6 +82,12 @@ const Post: React.FC<PostProps> = ({
             <span className="mr-2 px-1.5 py-0.5 rounded bg-neon-green/10 text-neon-green border border-neon-green/20 flex items-center">
               <MessageSquare size={10} className="mr-1" />
               Thread
+            </span>
+          )}
+          {isBridge && (
+            <span className="mr-2 px-1.5 py-0.5 rounded bg-neon-purple/10 text-neon-purple border border-neon-purple/20 flex items-center">
+              <Link2 size={10} className="mr-1" />
+              Bridge
             </span>
           )}
           <Clock size={12} className="mr-1" />
@@ -169,9 +181,12 @@ const Post: React.FC<PostProps> = ({
           <span>{connectionCount}</span>
         </button>
         
-        <button className="flex items-center gap-1 text-terminal-green hover:text-terminal-yellow transition-colors">
+        <button 
+          className={`flex items-center gap-1 transition-colors ${isBridge ? 'text-neon-purple hover:text-terminal-white' : 'text-terminal-green hover:text-terminal-yellow'}`}
+          onClick={isBridge && onBridgeSelect ? onBridgeSelect : undefined}
+        >
           <ArrowRight size={14} />
-          <span>TRACE</span>
+          <span>{isBridge ? 'VIEW BRIDGE' : 'TRACE'}</span>
         </button>
       </div>
     </div>
