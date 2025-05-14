@@ -1,6 +1,6 @@
 
 import { ContinuityBridge, ContinuityBridgeData } from '@/types/ContinuityBridge';
-import { PostData, Author } from '@/components/posts/PostList';
+import { PostData, Author } from '@/types/post'; // Fix import path
 import { toast } from "sonner";
 
 // Get all bridges from localStorage

@@ -3,6 +3,7 @@
 export type Author = {
   name: string;
   handle: string;
+  avatar?: string; // Adding optional avatar property
 };
 
 export type QuotedPost = {

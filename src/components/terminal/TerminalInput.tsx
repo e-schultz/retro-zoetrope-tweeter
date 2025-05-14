@@ -1,10 +1,11 @@
+
 import React, { useState } from 'react';
 import { ArrowRight, Hash, AtSign, BookMarked, Quote, MessageSquarePlus, Link2, ArrowUp } from 'lucide-react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { useIsMobile } from '@/hooks/use-mobile';
-import { PostData } from '../posts/PostList';
+import { PostData } from '@/types/post'; // Fix import path
 import BridgeImporter from '../bridges/BridgeImporter';
 
 type InputMode = 'thought' | 'thread' | 'quote' | 'link';
