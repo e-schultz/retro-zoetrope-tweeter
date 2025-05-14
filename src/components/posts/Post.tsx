@@ -1,37 +1,9 @@
-
 import React, { useState } from 'react';
 import { MessageSquare, Repeat2, Share, Star, AtSign, Clock, ArrowRight, Link2, Quote } from 'lucide-react';
 import TagChip from './TagChip';
+import { PostData } from '@/types/post';
 
-interface PostProps {
-  id: string;
-  author: {
-    name: string;
-    handle: string;
-    avatar?: string;
-  };
-  content: string;
-  timestamp: string;
-  tags: string[];
-  replyCount: number;
-  repostCount: number;
-  likeCount: number;
-  connectionCount: number;
-  isThread?: boolean;
-  isQuote?: boolean;
-  quotedPost?: {
-    id: string;
-    author: {
-      name: string;
-      handle: string;
-    };
-    content: string;
-    timestamp: string;
-  };
-  linkedPosts?: {
-    id: string;
-    title: string;
-  }[];
+interface PostProps extends PostData {
   onBridgeSelect?: () => void;
 }
 
